@@ -12,6 +12,7 @@ public class Alfombra {
     
     int peso;
     int alegria;
+    Regalo[] regalos;
     
     public Alfombra(int peso){
         this.peso = peso;
