@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -158,13 +157,15 @@ public class Main extends javax.swing.JFrame {
     }
     
     
-    public void leerFichero (File archivo) throws FileNotFoundException, IOException{ 
+    public Regalo[] leerFichero (File archivo) throws FileNotFoundException, IOException{ 
+        Regalo[] regalos = null;
         
         try{            
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
             String linea;
             int contador = 0;
+            int numeroRegalos;
             boolean alfombra =true;
             while ((linea=br.readLine())!=null) {                                    
                 if (alfombra){
@@ -178,18 +179,33 @@ public class Main extends javax.swing.JFrame {
                             case 2:
                                 AlfombraC = new Alfombra(Integer.parseInt(linea));
                                 alfombra = false;
-                                contador=-1;
+                                contador=-2;
                                 break;
                     }
                     contador ++;
                 } else{
-                    System.out.println(linea);    
-                    regalos[contador].setPeso(Integer.parseInt(linea));
+                    if(contador == -1){
+                        /*
+                        *   Linea que indica el número total de regalos
+                        */
+                        numeroRegalos = Integer.parseInt(linea);
+                        regalos = new Regalo[numeroRegalos];
+                        contador ++;
+                    }else{
+                        /*
+                        * Separamos los valores de peso y alegria que viene en la misma linea con un tabulador
+                        */
+                        String [] array = linea.split("\t"); 
+                        regalos[contador] = new Regalo(Integer.parseInt(array[0]),Integer.parseInt(array[1]));
+                        contador ++;
+                    }
+                    
                 }
             } 
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        return regalos;
     }
     
     
@@ -199,17 +215,25 @@ public class Main extends javax.swing.JFrame {
         
         switch(jcbejemplo.getSelectedItem().toString()){
             case "ejemplo 1": {
-                    File fis = new File("C:/Users/elena/Documents/universidad/AyC17/ej1");
+                /*
+                * Función System.getProperty("user.dir")---> Devuelve el directorio raíz donde se encuentra el proyecto,
+                *   para así poder ejecutar desde cualquier ordenador sin problemas de rutas
+                */
+                   File fis = new File(System.getProperty("user.dir")+"/ej1.txt");
                     try {                   
-                        leerFichero(fis);
+                        regalos = leerFichero(fis);
+                        for(int i=0;i<regalos.length;i++){
+                            System.out.println("Regalo "+i+": peso: "+regalos[i].getPeso()+"alegria: "+regalos[i].getAlegria());
+                        }
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                     break;
             }
                         
             case "ejemplo 2": {
-                    File fis = new File("C:/Users/elena/Documents/universidad/AyC17/ej2");
+                    File fis = new File(System.getProperty("user.dir")+"/ej2.txt");
                     try {
                         leerFichero(fis);
                     } catch (IOException ex) {
