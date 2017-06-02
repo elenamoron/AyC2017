@@ -188,11 +188,15 @@ public class Main extends javax.swing.JFrame {
                         *   Linea que indica el número total de regalos
                         */
                         numeroRegalos = Integer.parseInt(linea);
+                        regalos = new Regalo[numeroRegalos];
                         contador ++;
                     }else{
+                        /*
+                        * Separamos los valores de peso y alegria que viene en la misma linea con un tabulador
+                        */
                         String [] array = linea.split("\t"); 
-                        System.out.println("peso: "+array[0]);  
-                    //regalos[contador].setPeso(Integer.parseInt(linea));
+                        regalos[contador] = new Regalo(Integer.parseInt(array[0]),Integer.parseInt(array[1]));
+                        contador ++;
                     }
                     
                 }
@@ -218,6 +222,9 @@ public class Main extends javax.swing.JFrame {
                         leerFichero(fis);
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    for(int i=0;i<regalos.length;i++){
+                        System.out.println("Regalo "+i+": peso: "+regalos[i].getPeso()+"alegria: "+regalos[i].getAlegria());
                     }
                     break;
             }
