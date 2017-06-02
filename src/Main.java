@@ -157,7 +157,8 @@ public class Main extends javax.swing.JFrame {
     }
     
     
-    public void leerFichero (File archivo) throws FileNotFoundException, IOException{ 
+    public Regalo[] leerFichero (File archivo) throws FileNotFoundException, IOException{ 
+        Regalo[] regalos = null;
         
         try{            
             FileReader fr = new FileReader(archivo);
@@ -204,6 +205,7 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        return regalos;
     }
     
     
@@ -219,13 +221,14 @@ public class Main extends javax.swing.JFrame {
                 */
                    File fis = new File(System.getProperty("user.dir")+"/ej1.txt");
                     try {                   
-                        leerFichero(fis);
+                        regalos = leerFichero(fis);
+                        for(int i=0;i<regalos.length;i++){
+                            System.out.println("Regalo "+i+": peso: "+regalos[i].getPeso()+"alegria: "+regalos[i].getAlegria());
+                        }
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    for(int i=0;i<regalos.length;i++){
-                        System.out.println("Regalo "+i+": peso: "+regalos[i].getPeso()+"alegria: "+regalos[i].getAlegria());
-                    }
+                    
                     break;
             }
                         
