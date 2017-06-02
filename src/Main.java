@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -165,6 +164,7 @@ public class Main extends javax.swing.JFrame {
             BufferedReader br = new BufferedReader(fr);
             String linea;
             int contador = 0;
+            int numeroRegalos;
             boolean alfombra =true;
             while ((linea=br.readLine())!=null) {                                    
                 if (alfombra){
@@ -178,13 +178,23 @@ public class Main extends javax.swing.JFrame {
                             case 2:
                                 AlfombraC = new Alfombra(Integer.parseInt(linea));
                                 alfombra = false;
-                                contador=-1;
+                                contador=-2;
                                 break;
                     }
                     contador ++;
                 } else{
-                    System.out.println(linea);    
-                    regalos[contador].setPeso(Integer.parseInt(linea));
+                    if(contador == -1){
+                        /*
+                        *   Linea que indica el número total de regalos
+                        */
+                        numeroRegalos = Integer.parseInt(linea);
+                        contador ++;
+                    }else{
+                        String [] array = linea.split("\t"); 
+                        System.out.println("peso: "+array[0]);  
+                    //regalos[contador].setPeso(Integer.parseInt(linea));
+                    }
+                    
                 }
             } 
         } catch (Exception ex) {
@@ -199,7 +209,11 @@ public class Main extends javax.swing.JFrame {
         
         switch(jcbejemplo.getSelectedItem().toString()){
             case "ejemplo 1": {
-                    File fis = new File("C:/Users/elena/Documents/universidad/AyC17/ej1");
+                /*
+                * Función System.getProperty("user.dir")---> Devuelve el directorio raíz donde se encuentra el proyecto,
+                *   para así poder ejecutar desde cualquier ordenador sin problemas de rutas
+                */
+                   File fis = new File(System.getProperty("user.dir")+"/ej1.txt");
                     try {                   
                         leerFichero(fis);
                     } catch (IOException ex) {
@@ -209,7 +223,7 @@ public class Main extends javax.swing.JFrame {
             }
                         
             case "ejemplo 2": {
-                    File fis = new File("C:/Users/elena/Documents/universidad/AyC17/ej2");
+                    File fis = new File(System.getProperty("user.dir")+"/ej2.txt");
                     try {
                         leerFichero(fis);
                     } catch (IOException ex) {
