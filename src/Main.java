@@ -208,7 +208,61 @@ public class Main extends javax.swing.JFrame {
         return regalos;
     }
     
-    
+    public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos){
+        int mayorAlegria = regalos[0].getAlegria();
+        int pesoMayorAlegria = regalos[0].getPeso();
+        System.out.println(mayorAlegria);
+        Regalo [] regalosOrdenados = new Regalo[regalos.length];
+        for(int i=0; i< regalos.length; i++){
+            if(i==0){
+                
+                if (regalos[i+1].getAlegria() > mayorAlegria){
+                    System.out.println("Primera iteración con alegria"+regalos[i+1].getAlegria());
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
+                        regalosOrdenados[i].setAlegria(regalos[i+1].getAlegria());
+                        regalosOrdenados[i].setPeso(regalos[i+1].getPeso());
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        mayorAlegria = regalosOrdenados[i+1].getAlegria();
+                        pesoMayorAlegria = regalosOrdenados[i+1].getPeso();
+                        
+                    }else{
+                        regalosOrdenados[i] = new Regalo(regalos[i+1].getPeso(),regalos[i+1].getAlegria());
+                        mayorAlegria = regalosOrdenados[i+1].getAlegria();
+                        pesoMayorAlegria = regalosOrdenados[i+1].getPeso();
+                        System.out.println("Regalo ++++ con peso: "+
+                                regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
+                    }
+                } else if (regalos[i].getAlegria() > mayorAlegria){
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
+                        regalosOrdenados[i].setAlegria(regalos[i].getAlegria());
+                        regalosOrdenados[i].setPeso(regalos[i].getPeso());
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        mayorAlegria = regalosOrdenados[i].getAlegria();
+                        pesoMayorAlegria = regalosOrdenados[i].getPeso();
+                        
+                    }else{
+                        regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                        mayorAlegria = regalosOrdenados[i].getAlegria();
+                        pesoMayorAlegria = regalosOrdenados[i].getPeso();
+                        System.out.println("Regalo *** "+i+" con peso: "+
+                                regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
+                    }
+                }
+            } else {
+                regalosOrdenados[i] = new Regalo(pesoMayorAlegria,mayorAlegria);
+                mayorAlegria = regalosOrdenados[i].getAlegria();
+                pesoMayorAlegria = regalosOrdenados[i].getPeso();
+                System.out.println("Regalo ---- "+i+" con peso: "+
+                            regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
+                
+            }
+        }
+        return regalosOrdenados;
+    }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:      
@@ -222,8 +276,11 @@ public class Main extends javax.swing.JFrame {
                    File fis = new File(System.getProperty("user.dir")+"/ej1.txt");
                     try {                   
                         regalos = leerFichero(fis);
-                        for(int i=0;i<regalos.length;i++){
-                            System.out.println("Regalo "+i+": peso: "+regalos[i].getPeso()+"alegria: "+regalos[i].getAlegria());
+                        Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
+                        regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos);
+                        for(int i=0; i<regalosOrdenados.length;i++){
+                            System.out.println("Regalo "+i+": peso: "+
+                                    regalosOrdenados[i].getPeso()+" alegria: "+regalosOrdenados[i].getAlegria());
                         }
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
