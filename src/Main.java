@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -131,30 +132,6 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    public void SNumeros (final JTextField a) {
-        a.addKeyListener(new KeyAdapter() {
-            public void keyTyped (KeyEvent e) {
-                char c = e.getKeyChar();
-                int k = (int) e.getKeyChar();
-                if((!Character.isDigit(c))&& (k!=46)){
-                    getToolkit().beep();
-                    e.consume();
-                } else {
-                    if(k==46) { //es el codigo ASCII del punto para usar DOUBLE
-                        String dato = a.getText();
-                        int tama = dato.length();
-                        for (int i = 0; i <= tama; i++) {
-                            if(dato.contains(".")){
-                                getToolkit().beep();
-                                e.consume();
-                            }
-                        }
-                    }                        
-                }                    
-            }
-        });        
-    }
     
     
     public Regalo[] leerFichero (File archivo) throws FileNotFoundException, IOException{ 
@@ -208,16 +185,43 @@ public class Main extends javax.swing.JFrame {
         return regalos;
     }
     
-    public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos){
+    public Regalo[] correrPosiciones(Regalo[] regalosOrdenados, Regalo regaloAux, int posicion, int inicio){
+        Regalo regaloOrAux = null;
+        Regalo tmp = null;
+        for(int j=inicio;j<posicion;j++){
+            if(j==inicio){
+                regaloOrAux = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
+                regalosOrdenados[j].setPeso(regaloAux.getPeso());
+                regalosOrdenados[j].setAlegria(regaloAux.getAlegria());
+            }else{
+                if(tmp == null){
+                    tmp = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
+                    regalosOrdenados[j].setPeso(regaloOrAux.getPeso());
+                    regalosOrdenados[j].setAlegria(regaloOrAux.getAlegria());
+                    if(regalosOrdenados[j+1] != null){
+                        regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
+                        regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
+                    }
+                }
+            }
+                        
+        }
+        regalosOrdenados[posicion]=new Regalo(tmp.getPeso(),tmp.getAlegria());       
+        return regalosOrdenados;
+    } 
+    public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos, int longitud){
         int mayorAlegria = regalos[0].getAlegria();
         int pesoMayorAlegria = regalos[0].getPeso();
-        System.out.println(mayorAlegria);
         Regalo [] regalosOrdenados = new Regalo[regalos.length];
-        for(int i=0; i< regalos.length; i++){
-            if(i==0){
-                
+        for(int i=0; i< longitud; i++){
+            if(i==0){                
+                /*
+                * primera iteración
+                */
                 if (regalos[i+1].getAlegria() > mayorAlegria){
-                    System.out.println("Primera iteración con alegria"+regalos[i+1].getAlegria());
+                    /*
+                    * Si hubiese valor en regalosOrdenados
+                    */
                     if(regalosOrdenados[i]!=null){
                         Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
                         regalosOrdenados[i].setAlegria(regalos[i+1].getAlegria());
@@ -227,14 +231,35 @@ public class Main extends javax.swing.JFrame {
                         mayorAlegria = regalosOrdenados[i+1].getAlegria();
                         pesoMayorAlegria = regalosOrdenados[i+1].getPeso();
                         
-                    }else{
-                        regalosOrdenados[i] = new Regalo(regalos[i+1].getPeso(),regalos[i+1].getAlegria());
-                        mayorAlegria = regalosOrdenados[i+1].getAlegria();
-                        pesoMayorAlegria = regalosOrdenados[i+1].getPeso();
-                        System.out.println("Regalo ++++ con peso: "+
-                                regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
                     }
-                } else if (regalos[i].getAlegria() > mayorAlegria){
+                }else{
+                    regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                }
+            } else if (regalos[i].getAlegria() > mayorAlegria){
+                /*
+                 * Demás iteraciones
+                 */
+                if(regalosOrdenados[i]!=null){
+                    Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
+                    regalosOrdenados[i].setAlegria(regalos[i].getAlegria());
+                    regalosOrdenados[i].setPeso(regalos[i].getPeso());
+                    regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                    regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                    mayorAlegria = regalosOrdenados[i].getAlegria();
+                    pesoMayorAlegria = regalosOrdenados[i].getPeso();
+                }else{
+                    Regalo regaloAux = new Regalo(regalosOrdenados[0].getPeso(),regalosOrdenados[0].getAlegria());
+                    regalosOrdenados[0].setPeso(regalos[i].getPeso());
+                    regalosOrdenados[0].setAlegria(regalos[i].getAlegria());
+                    regalosOrdenados = correrPosiciones(regalosOrdenados,regaloAux,i,1);
+                    mayorAlegria = regalos[i].getAlegria();
+                    pesoMayorAlegria = regalos[i].getPeso();
+                }
+            } else if(regalos[i].getAlegria()== mayorAlegria){
+                /*
+                * Si las alegrias coinciden, se coloca el de menor peso primero
+                */
+                if(regalos[i].getPeso()<pesoMayorAlegria){
                     if(regalosOrdenados[i]!=null){
                         Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
                         regalosOrdenados[i].setAlegria(regalos[i].getAlegria());
@@ -248,17 +273,62 @@ public class Main extends javax.swing.JFrame {
                         regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
                         mayorAlegria = regalosOrdenados[i].getAlegria();
                         pesoMayorAlegria = regalosOrdenados[i].getPeso();
-                        System.out.println("Regalo *** "+i+" con peso: "+
-                                regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
+                        System.out.println("Regalo ---- "+i+" con peso: "+
+                                    regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
+                    }
+                }else{
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
+                        regalosOrdenados[i].setAlegria(mayorAlegria);
+                        regalosOrdenados[i].setPeso(pesoMayorAlegria);
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        mayorAlegria = regalosOrdenados[i].getAlegria();
+                        pesoMayorAlegria = regalosOrdenados[i].getPeso();
+                        
+                    }else{
+                        if(regalosOrdenados[i-1].getAlegria()<regalos[i].getAlegria()){
+                            Regalo regaloAux = new Regalo(regalosOrdenados[i-1].getPeso(),regalosOrdenados[i-1].getAlegria());
+                            regalosOrdenados[i-1].setAlegria(regalos[i].getAlegria());
+                            regalosOrdenados[i-1].setPeso(regalos[i].getPeso());
+                            regalosOrdenados[i] = new Regalo(regaloAux.getPeso(),regaloAux.getAlegria());
+                        }else{
+                            regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                        }
                     }
                 }
             } else {
-                regalosOrdenados[i] = new Regalo(pesoMayorAlegria,mayorAlegria);
-                mayorAlegria = regalosOrdenados[i].getAlegria();
-                pesoMayorAlegria = regalosOrdenados[i].getPeso();
-                System.out.println("Regalo ---- "+i+" con peso: "+
-                            regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
-                
+                if(regalosOrdenados[0]!=null){
+                    if(regalosOrdenados[i]!=null){
+                            Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria());
+                            regalosOrdenados[i].setAlegria(mayorAlegria);
+                            regalosOrdenados[i].setPeso(pesoMayorAlegria);
+                            regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                            regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                            mayorAlegria = regalosOrdenados[i].getAlegria();
+                            pesoMayorAlegria = regalosOrdenados[i].getPeso();
+
+                    }else{
+                        if(i!=0){
+                            if(regalosOrdenados[i-1].getAlegria()< regalos[i].getAlegria()){
+                                Regalo[] regalosOrPrim = null;
+                                regalosOrPrim = Arrays.stream(regalosOrdenados).filter(x -> x > regalos[i].getAlegria()).toArray();
+                                if(regalosOrdenados[1].getAlegria()< regalos[i].getAlegria()){
+                                    Regalo regaloAux = new Regalo(regalosOrdenados[1].getPeso(),regalosOrdenados[1].getAlegria());
+                                    regalosOrdenados[1].setPeso(regalos[i].getPeso());
+                                    regalosOrdenados[1].setAlegria(regalos[i].getAlegria());
+                                    regalosOrdenados = correrPosiciones(regalosOrdenados,regaloAux,i,2);
+                                }
+                            }else {
+                                regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                            }
+                        }else{
+                            regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                        }
+                    }
+                }else{
+                    regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                }
             }
         }
         return regalosOrdenados;
@@ -277,7 +347,7 @@ public class Main extends javax.swing.JFrame {
                     try {                   
                         regalos = leerFichero(fis);
                         Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
-                        regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos);
+                        regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
                         for(int i=0; i<regalosOrdenados.length;i++){
                             System.out.println("Regalo "+i+": peso: "+
                                     regalosOrdenados[i].getPeso()+" alegria: "+regalosOrdenados[i].getAlegria());
