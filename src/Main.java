@@ -5,16 +5,21 @@
  */
 
 
+import java.awt.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JTextField;
 
 /**
@@ -30,6 +35,7 @@ public class Main extends javax.swing.JFrame {
     Alfombra AlfombraA = null;
     Alfombra AlfombraB = null;
     Alfombra AlfombraC = null;
+    Alfombra [] alfombras = null;
     
     public Main() {
         initComponents();
@@ -85,46 +91,44 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-                        .addGap(60, 60, 60))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jcbejemplo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(89, 89, 89))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(164, 164, 164)
-                        .addComponent(jLabel4)))
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                        .addGap(60, 60, 60))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jcbejemplo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(142, 142, 142)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel4))
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jcbejemplo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addGap(18, 18, 18)
+                .addGap(64, 64, 64)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
@@ -136,7 +140,6 @@ public class Main extends javax.swing.JFrame {
     
     public Regalo[] leerFichero (File archivo) throws FileNotFoundException, IOException{ 
         Regalo[] regalos = null;
-        
         try{            
             FileReader fr = new FileReader(archivo);
             BufferedReader br = new BufferedReader(fr);
@@ -148,13 +151,13 @@ public class Main extends javax.swing.JFrame {
                 if (alfombra){
                     switch(contador){
                             case 0:
-                                AlfombraA = new Alfombra(Integer.parseInt(linea));
+                                AlfombraA = new Alfombra(Integer.parseInt(linea),"A");
                                 break;
                             case 1:
-                               AlfombraB = new Alfombra(Integer.parseInt(linea));
+                               AlfombraB = new Alfombra(Integer.parseInt(linea),"B");
                                break;
                             case 2:
-                                AlfombraC = new Alfombra(Integer.parseInt(linea));
+                                AlfombraC = new Alfombra(Integer.parseInt(linea),"C");
                                 alfombra = false;
                                 contador=-2;
                                 break;
@@ -165,7 +168,11 @@ public class Main extends javax.swing.JFrame {
                         /*
                         *   Linea que indica el número total de regalos
                         */
-                        numeroRegalos = Integer.parseInt(linea);
+                        String [] array = linea.split("\t");
+                        numeroRegalos = Integer.parseInt(array[0]);
+                        AlfombraA.initRegalos(numeroRegalos);
+                        AlfombraB.initRegalos(numeroRegalos);
+                        AlfombraC.initRegalos(numeroRegalos);
                         regalos = new Regalo[numeroRegalos];
                         contador ++;
                     }else{
@@ -198,6 +205,15 @@ public class Main extends javax.swing.JFrame {
                     tmp = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
                     regalosOrdenados[j].setPeso(regaloOrAux.getPeso());
                     regalosOrdenados[j].setAlegria(regaloOrAux.getAlegria());
+                    if(regalosOrdenados[j+1] != null){
+                        regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
+                        regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
+                    }
+                }else{
+                    regalosOrdenados[j].setPeso(tmp.getPeso());
+                    regalosOrdenados[j].setAlegria(tmp.getAlegria());
+                    tmp.setPeso(regaloOrAux.getPeso());
+                    tmp.setAlegria(regaloOrAux.getAlegria());
                     if(regalosOrdenados[j+1] != null){
                         regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
                         regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
@@ -273,8 +289,6 @@ public class Main extends javax.swing.JFrame {
                         regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
                         mayorAlegria = regalosOrdenados[i].getAlegria();
                         pesoMayorAlegria = regalosOrdenados[i].getPeso();
-                        System.out.println("Regalo ---- "+i+" con peso: "+
-                                    regalosOrdenados[i].getPeso()+" y alegria :"+regalosOrdenados[i].getAlegria());
                     }
                 }else{
                     if(regalosOrdenados[i]!=null){
@@ -311,15 +325,27 @@ public class Main extends javax.swing.JFrame {
                     }else{
                         if(i!=0){
                             if(regalosOrdenados[i-1].getAlegria()< regalos[i].getAlegria()){
-                                Regalo[] regalosOrPrim = null;
-                                regalosOrPrim = Arrays.stream(regalosOrdenados).filter(x -> x > regalos[i].getAlegria()).toArray();
-                                if(regalosOrdenados[1].getAlegria()< regalos[i].getAlegria()){
-                                    Regalo regaloAux = new Regalo(regalosOrdenados[1].getPeso(),regalosOrdenados[1].getAlegria());
-                                    regalosOrdenados[1].setPeso(regalos[i].getPeso());
-                                    regalosOrdenados[1].setAlegria(regalos[i].getAlegria());
-                                    regalosOrdenados = correrPosiciones(regalosOrdenados,regaloAux,i,2);
+                                for (int k = 0; k < i; k++) {
+                                    if (regalosOrdenados[k].getAlegria()<regalos[i].getAlegria()) {
+                                        Regalo regaloAux = new Regalo(regalosOrdenados[k].getPeso(),
+                                                                      regalosOrdenados[k].getAlegria());
+                                        regalosOrdenados[k].setPeso(regalos[i].getPeso());
+                                        regalosOrdenados[k].setAlegria(regalos[i].getAlegria());
+                                        regalosOrdenados = correrPosiciones(regalosOrdenados,regaloAux,i,k+1);
+                                        //Para salir del bucle
+                                        k=i;
+                                    }
                                 }
-                            }else {
+                            } else if(regalosOrdenados[i-1].getAlegria()== regalos[i].getAlegria()){
+                                if(regalosOrdenados[i-1].getPeso()<= regalos[i].getPeso()){
+                                    regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
+                                }else{
+                                    Regalo regaloAux = new Regalo(regalosOrdenados[i-1].getPeso(),regalosOrdenados[i-1].getAlegria());
+                                    regalosOrdenados[i-1].setPeso(regalos[i].getPeso());
+                                    regalosOrdenados[i-1].setAlegria(regalos[i].getAlegria());
+                                    regalosOrdenados[i]= new Regalo(regaloAux.getPeso(),regaloAux.getAlegria());
+                                }
+                            } else {
                                 regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria());
                             }
                         }else{
@@ -336,7 +362,7 @@ public class Main extends javax.swing.JFrame {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:      
-        
+        Voraz vo = new Voraz();
         switch(jcbejemplo.getSelectedItem().toString()){
             case "ejemplo 1": {
                 /*
@@ -348,10 +374,44 @@ public class Main extends javax.swing.JFrame {
                         regalos = leerFichero(fis);
                         Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
                         regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
-                        for(int i=0; i<regalosOrdenados.length;i++){
-                            System.out.println("Regalo "+i+": peso: "+
-                                    regalosOrdenados[i].getPeso()+" alegria: "+regalosOrdenados[i].getAlegria());
+                        alfombras = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
+                        jtaSolucion.append("Resultado por voraz\n");
+                        FileWriter fichero = null;
+                        PrintWriter pw = null;
+                        for (int i=0; i<alfombras.length;i++){
+                            alfombras[i].setAlegria(alfombras[i].sumarAlegria(alfombras[i].getRegalos()));
+                            jtaSolucion.append("Alegria de la alfombra "+
+                                    alfombras[i].getNombre()+"--"+
+                                    alfombras[i].getAlegria()+" lleva "+
+                                    alfombras[i].getNumRegalos(alfombras[i].getRegalos())+" número de regalos"+"\n");
                         }
+                        try{
+                                fichero = new FileWriter(System.getProperty("user.dir")+"/ej1Resultado.txt");
+                                pw = new PrintWriter(fichero);
+                                pw.println("Alegria de la alfombra "+
+                                    alfombras[0].getNombre()+"--"+
+                                    alfombras[0].getAlegria()+" lleva "+
+                                    alfombras[0].getNumRegalos(alfombras[0].getRegalos())+" número de regalos"+"\n");
+
+                                pw.println("Alegria de la alfombra "+
+                                    alfombras[1].getNombre()+"--"+
+                                    alfombras[1].getAlegria()+" lleva "+
+                                    alfombras[1].getNumRegalos(alfombras[1].getRegalos())+" número de regalos"+"\n");
+
+                                pw.println("Alegria de la alfombra "+
+                                    alfombras[2].getNombre()+"--"+
+                                    alfombras[2].getAlegria()+" lleva "+
+                                    alfombras[2].getNumRegalos(alfombras[2].getRegalos())+" número de regalos"+"\n");
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if (null != fichero)
+                                   fichero.close();
+                                } catch (Exception e2) {
+                                   e2.printStackTrace();
+                                }
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
