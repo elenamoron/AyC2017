@@ -6,7 +6,7 @@
 
 /**
  *
- * @author elena
+ * @author TOSHIBA
  */
 public class Alfombra {
     
@@ -34,6 +34,10 @@ public class Alfombra {
     
     public void setNombre(String nombre){
         this.nombre = nombre;
+    }
+    
+    public void setRegalos(Regalo[] regalos){
+        this.regalos=regalos;
     }
     public Regalo[] getRegalos(){
         return this.regalos;

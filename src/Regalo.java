@@ -6,7 +6,7 @@
 
 /**
  *
- * @author elena
+ * @author TOSHIBA
  */
 public class Regalo {
     

@@ -35,8 +35,11 @@ public class Main extends javax.swing.JFrame {
     Alfombra AlfombraA = null;
     Alfombra AlfombraB = null;
     Alfombra AlfombraC = null;
-    Alfombra [] alfombras = null;
-    
+    Alfombra [] alfombras_voraz = null;
+    Alfombra [] alfombras_dyv = null;
+    int PesoA=0;
+    int PesoB=0;
+    int PesoC=0;
     public Main() {
         initComponents();
         
@@ -151,13 +154,16 @@ public class Main extends javax.swing.JFrame {
                 if (alfombra){
                     switch(contador){
                             case 0:
-                                AlfombraA = new Alfombra(Integer.parseInt(linea),"A");
+                                PesoA = Integer.parseInt(linea);
+                                AlfombraA = new Alfombra(PesoA,"A");
                                 break;
                             case 1:
-                               AlfombraB = new Alfombra(Integer.parseInt(linea),"B");
+                               PesoB = Integer.parseInt(linea);
+                               AlfombraB = new Alfombra(PesoB,"B");
                                break;
                             case 2:
-                                AlfombraC = new Alfombra(Integer.parseInt(linea),"C");
+                                PesoC = Integer.parseInt(linea);
+                                AlfombraC = new Alfombra(PesoC,"C");
                                 alfombra = false;
                                 contador=-2;
                                 break;
@@ -195,34 +201,42 @@ public class Main extends javax.swing.JFrame {
     public Regalo[] correrPosiciones(Regalo[] regalosOrdenados, Regalo regaloAux, int posicion, int inicio){
         Regalo regaloOrAux = null;
         Regalo tmp = null;
-        for(int j=inicio;j<posicion;j++){
-            if(j==inicio){
-                regaloOrAux = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
-                regalosOrdenados[j].setPeso(regaloAux.getPeso());
-                regalosOrdenados[j].setAlegria(regaloAux.getAlegria());
-            }else{
-                if(tmp == null){
-                    tmp = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
-                    regalosOrdenados[j].setPeso(regaloOrAux.getPeso());
-                    regalosOrdenados[j].setAlegria(regaloOrAux.getAlegria());
-                    if(regalosOrdenados[j+1] != null){
-                        regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
-                        regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
-                    }
+        if(inicio!=posicion){
+            for(int j=inicio;j<posicion;j++){
+                if(j==inicio){
+                    regaloOrAux = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
+                    regalosOrdenados[j].setPeso(regaloAux.getPeso());
+                    regalosOrdenados[j].setAlegria(regaloAux.getAlegria());
                 }else{
-                    regalosOrdenados[j].setPeso(tmp.getPeso());
-                    regalosOrdenados[j].setAlegria(tmp.getAlegria());
-                    tmp.setPeso(regaloOrAux.getPeso());
-                    tmp.setAlegria(regaloOrAux.getAlegria());
-                    if(regalosOrdenados[j+1] != null){
-                        regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
-                        regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
+                    if(tmp == null){
+                        tmp = new Regalo(regalosOrdenados[j].getPeso(),regalosOrdenados[j].getAlegria());
+                        regalosOrdenados[j].setPeso(regaloOrAux.getPeso());
+                        regalosOrdenados[j].setAlegria(regaloOrAux.getAlegria());
+                        if(regalosOrdenados[j+1] != null){
+                            regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
+                            regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
+                        }
+                    }else{
+                        regalosOrdenados[j].setPeso(tmp.getPeso());
+                        regalosOrdenados[j].setAlegria(tmp.getAlegria());
+                        tmp.setPeso(regaloOrAux.getPeso());
+                        tmp.setAlegria(regaloOrAux.getAlegria());
+                        if(regalosOrdenados[j+1] != null){
+                            regaloOrAux.setPeso(regalosOrdenados[j+1].getPeso());
+                            regaloOrAux.setAlegria(regalosOrdenados[j+1].getAlegria());
+                        }
                     }
                 }
+
             }
-                        
+            if(tmp!=null){
+                regalosOrdenados[posicion]=new Regalo(tmp.getPeso(),tmp.getAlegria());       
+            }else{
+                regalosOrdenados[posicion]=new Regalo(regaloOrAux.getPeso(),regaloOrAux.getAlegria());       
+            }
+        }else{
+            regalosOrdenados[posicion]=new Regalo(regaloAux.getPeso(),regaloAux.getAlegria()); 
         }
-        regalosOrdenados[posicion]=new Regalo(tmp.getPeso(),tmp.getAlegria());       
         return regalosOrdenados;
     } 
     public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos, int longitud){
@@ -363,74 +377,81 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:      
         Voraz vo = new Voraz();
+        DyV dyv = new DyV();
+        File fis = new File("");
+        String salida="";
         switch(jcbejemplo.getSelectedItem().toString()){
             case "ejemplo 1": {
                 /*
                 * Función System.getProperty("user.dir")---> Devuelve el directorio raíz donde se encuentra el proyecto,
                 *   para así poder ejecutar desde cualquier ordenador sin problemas de rutas
                 */
-                   File fis = new File(System.getProperty("user.dir")+"/ej1.txt");
-                    try {                   
-                        regalos = leerFichero(fis);
-                        Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
-                        regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
-                        alfombras = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
-                        jtaSolucion.append("Resultado por voraz\n");
-                        FileWriter fichero = null;
-                        PrintWriter pw = null;
-                        for (int i=0; i<alfombras.length;i++){
-                            alfombras[i].setAlegria(alfombras[i].sumarAlegria(alfombras[i].getRegalos()));
-                            jtaSolucion.append("Alegria de la alfombra "+
-                                    alfombras[i].getNombre()+"--"+
-                                    alfombras[i].getAlegria()+" lleva "+
-                                    alfombras[i].getNumRegalos(alfombras[i].getRegalos())+" número de regalos"+"\n");
-                        }
-                        try{
-                                fichero = new FileWriter(System.getProperty("user.dir")+"/ej1Resultado.txt");
-                                pw = new PrintWriter(fichero);
-                                pw.println("Alegria de la alfombra "+
-                                    alfombras[0].getNombre()+"--"+
-                                    alfombras[0].getAlegria()+" lleva "+
-                                    alfombras[0].getNumRegalos(alfombras[0].getRegalos())+" número de regalos"+"\n");
-
-                                pw.println("Alegria de la alfombra "+
-                                    alfombras[1].getNombre()+"--"+
-                                    alfombras[1].getAlegria()+" lleva "+
-                                    alfombras[1].getNumRegalos(alfombras[1].getRegalos())+" número de regalos"+"\n");
-
-                                pw.println("Alegria de la alfombra "+
-                                    alfombras[2].getNombre()+"--"+
-                                    alfombras[2].getAlegria()+" lleva "+
-                                    alfombras[2].getNumRegalos(alfombras[2].getRegalos())+" número de regalos"+"\n");
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                if (null != fichero)
-                                   fichero.close();
-                                } catch (Exception e2) {
-                                   e2.printStackTrace();
-                                }
-                    } catch (IOException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-                    break;
+                fis = new File(System.getProperty("user.dir")+"/ej1.txt");
+                salida="ej1Resultado.txt";
+                break;
             }
                         
             case "ejemplo 2": {
-                    File fis = new File(System.getProperty("user.dir")+"/ej2.txt");
-                    try {
-                        leerFichero(fis);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
+                fis = new File(System.getProperty("user.dir")+"/ej2.txt");
+                salida="ej2Resultado.txt";
+                break;
             }
         
         
         }
+        try {                   
+            regalos = leerFichero(fis);
+            Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
+            Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
+            regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
+            regalosOrdenadosCopy = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
+            alfombras_voraz = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
+            AlfombraA.setPeso(PesoA);
+            AlfombraA.setRegalos(null);
+            AlfombraB.setPeso(PesoB);
+            AlfombraB.setRegalos(null);
+            AlfombraC.setPeso(PesoC);
+            AlfombraC.setRegalos(null);
+            alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC);
+            jtaSolucion.append("Resultado por voraz\n");
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            for (int i=0; i<alfombras_voraz.length;i++){
+                alfombras_voraz[i].setAlegria(alfombras_voraz[i].sumarAlegria(alfombras_voraz[i].getRegalos()));
+                jtaSolucion.append("Alegria de la alfombra "+
+                        alfombras_voraz[i].getNombre()+"--"+
+                        alfombras_voraz[i].getAlegria()+" lleva "+
+                        alfombras_voraz[i].getNumRegalos(alfombras_voraz[i].getRegalos())+" número de regalos"+"\n");
+            }
+            try{
+                fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
+                pw = new PrintWriter(fichero);
+                pw.println("Alegria de la alfombra "+
+                        alfombras_voraz[0].getNombre()+"--"+
+                        alfombras_voraz[0].getAlegria()+" lleva "+
+                        alfombras_voraz[0].getNumRegalos(alfombras_voraz[0].getRegalos())+" número de regalos"+"\n");
+                pw.println("Alegria de la alfombra "+
+                        alfombras_voraz[1].getNombre()+"--"+
+                        alfombras_voraz[1].getAlegria()+" lleva "+
+                        alfombras_voraz[1].getNumRegalos(alfombras_voraz[1].getRegalos())+" número de regalos"+"\n");
+                pw.println("Alegria de la alfombra "+
+                        alfombras_voraz[2].getNombre()+"--"+
+                        alfombras_voraz[2].getAlegria()+" lleva "+
+                        alfombras_voraz[2].getNumRegalos(alfombras_voraz[2].getRegalos())+" número de regalos"+"\n");
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (null != fichero)
+                    fichero.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
