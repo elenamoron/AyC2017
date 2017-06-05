@@ -12,10 +12,12 @@ public class Regalo {
     
     int peso;
     int alegria;
+    int numero;
     
-    public Regalo(int peso, int alegria){
+    public Regalo(int peso, int alegria, int numero){
         this.peso = peso;
         this.alegria = alegria;
+        this.numero = numero;
     }
     
     public int getPeso(){
@@ -32,5 +34,13 @@ public class Regalo {
     
     public void setAlegria(int alegria){
         this.alegria = alegria;
+    }
+    
+    public int getNumero(){
+        return this.numero;
+    }
+    
+    public void setNumero(int numero){
+        this.numero = numero;
     }
 }

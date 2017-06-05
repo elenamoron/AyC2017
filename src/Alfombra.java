@@ -14,6 +14,7 @@ public class Alfombra {
     int alegria;
     Regalo[] regalos;
     String nombre;
+    int regalosIntro;
     
     public Alfombra(int peso, String nombre){
         this.peso = peso;
@@ -44,7 +45,18 @@ public class Alfombra {
     }
     
     public void setRegalo(Regalo regalo,int posicion){
-        this.regalos[posicion] = new Regalo(regalo.getPeso(),regalo.getAlegria());
+        this.regalos[posicion] = new Regalo(regalo.getPeso(),regalo.getAlegria(),posicion);
+    }
+    
+    public int getRegalosIntro(){
+        return this.regalosIntro;
+    }
+    public void setRegalosIntro(int regalosIntro){
+        if(this.regalosIntro == 0 || regalosIntro != 0){
+            this.regalosIntro++;
+        }else{
+            this.regalosIntro = regalosIntro;
+        }
     }
     
     public int getAlegria(){
