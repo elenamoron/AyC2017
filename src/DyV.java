@@ -35,7 +35,7 @@ public class DyV {
              */
             System.arraycopy(regalos, 0           , part1, 0     , part1.length);
             System.arraycopy(regalos, part1.length, part2, 0     , part2.length);
-            if(pesoDisponible>0){
+            if(pesoDisponible>0 && alfombrasllenas<3){
                 if(part1[0].getPeso()>0){
                     if(part1[0].getPeso() <= pesoDisponible && (numRegalos/2) > 1){
                         RepartirRegalos(part1,A,B,C, regaloAux);
