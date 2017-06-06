@@ -442,6 +442,7 @@ public class Main extends javax.swing.JFrame {
             jtaSolucion.append("Resultado por voraz\n");
             FileWriter fichero = null;
             PrintWriter pw = null;
+            pw.println("Resultado por voraz\n");
             mostrarResultado(alfombras_voraz);
             fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
             pw = new PrintWriter(fichero);
@@ -460,6 +461,7 @@ public class Main extends javax.swing.JFrame {
             AlfombraC.setAlegria(0);
             AlfombraC.setRegalosIntro(0);
             alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosCopy);
+            pw.println("Resultado por Divide y vencerás \n");
             mostrarResultado(alfombras_dyv);
             escribirFichero(alfombras_dyv, pw, salida);
             fichero.close();

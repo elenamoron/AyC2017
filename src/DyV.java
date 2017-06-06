@@ -30,6 +30,9 @@ public class DyV {
         if(regalos.length > 1){
             Regalo[] part1 = new Regalo[numRegalos/2];
             Regalo[] part2 = new Regalo[numRegalos/2];
+            if(numRegalos%2!=0){
+                part2 = new Regalo[(numRegalos/2)+1];
+            }
             /*
              * Dividir nuestro array para aplicar el algoritmo
              */
