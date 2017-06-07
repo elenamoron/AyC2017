@@ -71,7 +71,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel3.setText("Regalos posibles:");
 
-        jcbejemplo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ejemplo 1", "ejemplo 2" }));
+        jcbejemplo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ejemplo 1", "ejemplo 2", "ejemplo 3" }));
         jcbejemplo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbejemploActionPerformed(evt);
@@ -265,6 +265,8 @@ public class Main extends javax.swing.JFrame {
                         mayorAlegria = regalosOrdenados[i+1].getAlegria();
                         pesoMayorAlegria = regalosOrdenados[i+1].getPeso();
                         
+                    }else{
+                        regalosOrdenados[i]= new Regalo(regalos[i+1].getPeso(),regalos[i+1].getAlegria(),i);
                     }
                 }else{
                     regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
@@ -448,7 +450,12 @@ public class Main extends javax.swing.JFrame {
                 salida="ej2Resultado.txt";
                 break;
             }
-        
+            
+            case "ejemplo 3": {
+                fis = new File(System.getProperty("user.dir")+"/ej3.txt");
+                salida="ej3Resultado.txt";
+                break;
+            }
         
         }
         try {                   
@@ -473,7 +480,11 @@ public class Main extends javax.swing.JFrame {
             mostrarResultado(alfombras_dyv);
             escribirFichero(alfombras_dyv, pw, salida);
             resetVariables();
-            alfombras_dinamico = dinamico.RepartirRegalos(regalos,AlfombraA,AlfombraB, AlfombraC);
+            jtaSolucion.append("Resultado por Programación dinámica \n");
+            alfombras_dinamico = dinamico.RepartirRegalos(regalos,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
+            pw.println("Resultado por Programación dinámica \n");
+            mostrarResultado(alfombras_dinamico);
+            escribirFichero(alfombras_dinamico, pw, salida);
             fichero.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
