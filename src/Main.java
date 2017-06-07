@@ -37,6 +37,7 @@ public class Main extends javax.swing.JFrame {
     Alfombra AlfombraC = null;
     Alfombra [] alfombras_voraz = null;
     Alfombra [] alfombras_dyv = null;
+    Alfombra [] alfombras_dinamico = null;
     int PesoA=0;
     int PesoB=0;
     int PesoC=0;
@@ -407,10 +408,28 @@ public class Main extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
+    public void resetVariables(){
+        AlfombraA.setPeso(PesoA);
+        AlfombraA.setRegalos(new Regalo[regalos.length]);
+        AlfombraA.setAlegria(0);
+        AlfombraA.setRegalosIntro(0);
+        AlfombraB.setPeso(PesoB);
+        AlfombraB.setRegalos(new Regalo[regalos.length]);
+        AlfombraB.setAlegria(0);
+        AlfombraB.setRegalosIntro(0);
+        AlfombraC.setPeso(PesoC);
+        AlfombraC.setRegalos(new Regalo[regalos.length]);
+        AlfombraC.setAlegria(0);
+        AlfombraC.setRegalosIntro(0);
+            
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:      
         Voraz vo = new Voraz();
         DyV dyv = new DyV();
+        Dinamico dinamico = new Dinamico();
         File fis = new File("");
         String salida="";
         switch(jcbejemplo.getSelectedItem().toString()){
@@ -442,28 +461,19 @@ public class Main extends javax.swing.JFrame {
             jtaSolucion.append("Resultado por voraz\n");
             FileWriter fichero = null;
             PrintWriter pw = null;
-            pw.println("Resultado por voraz\n");
-            mostrarResultado(alfombras_voraz);
             fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
             pw = new PrintWriter(fichero);
+            pw.println("Resultado por voraz\n");
+            mostrarResultado(alfombras_voraz);
             escribirFichero(alfombras_voraz, pw, salida);
             jtaSolucion.append("Resultado por Divide y vencerás \n");
-            AlfombraA.setPeso(PesoA);
-            AlfombraA.setRegalos(new Regalo[regalos.length]);
-            AlfombraA.setAlegria(0);
-            AlfombraA.setRegalosIntro(0);
-            AlfombraB.setPeso(PesoB);
-            AlfombraB.setRegalos(new Regalo[regalos.length]);
-            AlfombraB.setAlegria(0);
-            AlfombraB.setRegalosIntro(0);
-            AlfombraC.setPeso(PesoC);
-            AlfombraC.setRegalos(new Regalo[regalos.length]);
-            AlfombraC.setAlegria(0);
-            AlfombraC.setRegalosIntro(0);
+            resetVariables();
             alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosCopy);
             pw.println("Resultado por Divide y vencerás \n");
             mostrarResultado(alfombras_dyv);
             escribirFichero(alfombras_dyv, pw, salida);
+            resetVariables();
+            alfombras_dinamico = dinamico.RepartirRegalos(regalos,AlfombraA,AlfombraB, AlfombraC);
             fichero.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
