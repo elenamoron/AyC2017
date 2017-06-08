@@ -38,6 +38,7 @@ public class Main extends javax.swing.JFrame {
     Alfombra [] alfombras_voraz = null;
     Alfombra [] alfombras_dyv = null;
     Alfombra [] alfombras_dinamico = null;
+    Alfombra [] alfombras_backtraking = null;
     int PesoA=0;
     int PesoB=0;
     int PesoC=0;
@@ -432,6 +433,7 @@ public class Main extends javax.swing.JFrame {
         Voraz vo = new Voraz();
         DyV dyv = new DyV();
         Dinamico dinamico = new Dinamico();
+        Backtraking backtraking = new Backtraking();
         File fis = new File("");
         String salida="";
         switch(jcbejemplo.getSelectedItem().toString()){
@@ -460,6 +462,8 @@ public class Main extends javax.swing.JFrame {
         }
         try {                   
             regalos = leerFichero(fis);
+            Regalo [] regalosCopy = new Regalo[regalos.length]; 
+            regalosCopy = leerFichero(fis);
             Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
             Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
             regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
@@ -485,6 +489,11 @@ public class Main extends javax.swing.JFrame {
             pw.println("Resultado por Programación dinámica \n");
             mostrarResultado(alfombras_dinamico);
             escribirFichero(alfombras_dinamico, pw, salida);
+            resetVariables();
+            jtaSolucion.append("Resultado por Backtraking \n");
+            alfombras_backtraking = backtraking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC, regalosCopy);
+            pw.println("Resultado por Programación dinámica \n");
+            mostrarResultado(alfombras_backtraking);
             fichero.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
