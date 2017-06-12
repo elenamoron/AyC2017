@@ -433,7 +433,7 @@ public class Main extends javax.swing.JFrame {
         Voraz vo = new Voraz();
         DyV dyv = new DyV();
         Dinamico dinamico = new Dinamico();
-        Backtraking backtraking = new Backtraking();
+        Backtracking backtraking = new Backtracking();
         File fis = new File("");
         String salida="";
         switch(jcbejemplo.getSelectedItem().toString()){
@@ -492,8 +492,9 @@ public class Main extends javax.swing.JFrame {
             resetVariables();
             jtaSolucion.append("Resultado por Backtraking \n");
             alfombras_backtraking = backtraking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC, regalosCopy);
-            pw.println("Resultado por Programación dinámica \n");
+            pw.println("Resultado por Backtraking \n");
             mostrarResultado(alfombras_backtraking);
+            escribirFichero(alfombras_backtraking, pw, salida);
             fichero.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
