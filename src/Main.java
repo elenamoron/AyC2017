@@ -38,7 +38,7 @@ public class Main extends javax.swing.JFrame {
     Alfombra [] alfombras_voraz = null;
     Alfombra [] alfombras_dyv = null;
     Alfombra [] alfombras_dinamico = null;
-    Alfombra [] alfombras_backtraking = null;
+    Alfombra [] alfombras_backtracking = null;
     int PesoA=0;
     int PesoB=0;
     int PesoC=0;
@@ -244,6 +244,10 @@ public class Main extends javax.swing.JFrame {
         }
         return regalosOrdenados;
     } 
+    public Regalo[] ordenarPorTasa(Regalo[] regalos, int longitud){
+        Double [] tasas = new Double
+        return regalos;
+    }
     public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos, int longitud){
         int mayorAlegria = regalos[0].getAlegria();
         int pesoMayorAlegria = regalos[0].getPeso();
@@ -383,7 +387,7 @@ public class Main extends javax.swing.JFrame {
         return regalosOrdenados;
     }
     
-    public void mostrarResultado(Alfombra[] alfombras){
+    public void mostrarResultado(Alfombra[] alfombras, long duration){
         for (int i=0; i<alfombras.length;i++){
                 alfombras[i].setAlegria(alfombras[i].sumarAlegria(alfombras[i].getRegalos()));
                 jtaSolucion.append("Alegria de la alfombra "+
@@ -391,6 +395,7 @@ public class Main extends javax.swing.JFrame {
                         alfombras[i].getAlegria()+" lleva "+
                         alfombras[i].getNumRegalos(alfombras[i].getRegalos())+" número de regalos"+"\n");
             }
+        jtaSolucion.append("Duracion del algoritmo en nanosegundos "+duration+"\n");
     }
     
     public void escribirFichero(Alfombra[] alfombras, PrintWriter pw, String salida ){
@@ -433,7 +438,7 @@ public class Main extends javax.swing.JFrame {
         Voraz vo = new Voraz();
         DyV dyv = new DyV();
         Dinamico dinamico = new Dinamico();
-        Backtracking backtraking = new Backtracking();
+        Backtracking backtracking = new Backtracking();
         File fis = new File("");
         String salida="";
         switch(jcbejemplo.getSelectedItem().toString()){
@@ -468,33 +473,45 @@ public class Main extends javax.swing.JFrame {
             Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
             regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
             regalosOrdenadosCopy = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
+            long startTime = System.nanoTime();
             alfombras_voraz = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
             jtaSolucion.append("Resultado por voraz\n");
             FileWriter fichero = null;
             PrintWriter pw = null;
             fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
             pw = new PrintWriter(fichero);
             pw.println("Resultado por voraz\n");
-            mostrarResultado(alfombras_voraz);
+            mostrarResultado(alfombras_voraz, duration);
             escribirFichero(alfombras_voraz, pw, salida);
             jtaSolucion.append("Resultado por Divide y vencerás \n");
             resetVariables();
+            startTime = System.nanoTime();
             alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosCopy);
+            endTime = System.nanoTime();
+            duration = (endTime - startTime);
             pw.println("Resultado por Divide y vencerás \n");
-            mostrarResultado(alfombras_dyv);
+            mostrarResultado(alfombras_dyv,duration);
             escribirFichero(alfombras_dyv, pw, salida);
             resetVariables();
             jtaSolucion.append("Resultado por Programación dinámica \n");
+            startTime = System.nanoTime();
             alfombras_dinamico = dinamico.RepartirRegalos(regalos,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
+            endTime = System.nanoTime();
+            duration = (endTime - startTime);
             pw.println("Resultado por Programación dinámica \n");
-            mostrarResultado(alfombras_dinamico);
+            mostrarResultado(alfombras_dinamico,duration);
             escribirFichero(alfombras_dinamico, pw, salida);
             resetVariables();
             jtaSolucion.append("Resultado por Backtraking \n");
-            alfombras_backtraking = backtraking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC, regalosCopy);
+            startTime = System.nanoTime();
+            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC);
+            endTime = System.nanoTime();
+            duration = (endTime - startTime);
             pw.println("Resultado por Backtraking \n");
-            mostrarResultado(alfombras_backtraking);
-            escribirFichero(alfombras_backtraking, pw, salida);
+            mostrarResultado(alfombras_backtracking,duration);
+            escribirFichero(alfombras_backtracking, pw, salida);
             fichero.close();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
