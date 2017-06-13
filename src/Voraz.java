@@ -39,7 +39,7 @@ public class Voraz {
             if(pesoDisponible>0){
                 if(regalos[i].getPeso()>0){
                     if(regalos[i].getPeso() <= pesoDisponible ){
-                        alfombraMayor.setRegalo(regalos[i],regalosIntro);
+                        alfombraMayor.setRegalo(regalos[i],regalosIntro,regalos[i].getNumero());
                         regalosIntro++;
                         pesoDisponible -= regalos[i].getPeso();
                         regalos[i].setAlegria(0);

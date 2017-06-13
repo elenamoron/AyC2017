@@ -4,10 +4,6 @@
  * and open the template in the editor.
  */
 
-
-import java.awt.List;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,12 +11,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.swing.JTextField;
 
 /**
  *
@@ -245,8 +237,113 @@ public class Main extends javax.swing.JFrame {
         return regalosOrdenados;
     } 
     public Regalo[] ordenarPorTasa(Regalo[] regalos, int longitud){
-        Double [] tasas = new Double
-        return regalos;
+        double [] tasas = new double[longitud];
+        Regalo [] regalosOrdenados = new Regalo[regalos.length];
+        for(int i=0; i<longitud; i++){
+            tasas[i] = (double)regalos[i].getAlegria()/regalos[i].getPeso();
+        }
+        double mejorTasa = tasas[0];
+        int numeroRegalo = 0;
+        for(int i=0; i<longitud; i++){
+            if(i==0){
+                if(tasas[i+1] < mejorTasa){
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria(),i);
+                        regalosOrdenados[i].setAlegria(regalos[i+1].getAlegria());
+                        regalosOrdenados[i].setPeso(regalos[i+1].getPeso());
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        regalos[i+1]=regalos[i];
+                        mejorTasa = tasas[i+1];
+                        numeroRegalo = i+1;
+                        tasas[i+1] = tasas[i];
+                    }else{
+                        regalosOrdenados[i]= new Regalo(regalos[i+1].getPeso(),regalos[i+1].getAlegria(),i);
+                        regalos[i+1]=regalos[i];
+                        mejorTasa = tasas[i+1];
+                        numeroRegalo = i+1;
+                        tasas[i+1] = tasas[i];
+                    }
+                } else{
+                    regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
+                }
+            } else if (tasas[i] < mejorTasa){
+                /*
+                 * Demás iteraciones
+                 */
+                if(regalosOrdenados[i]!=null){
+                    Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria(),i);
+                    regalosOrdenados[i].setAlegria(regalos[i].getAlegria());
+                    regalosOrdenados[i].setPeso(regalos[i].getPeso());
+                    regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                    regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                    mejorTasa = tasas[i];
+                    numeroRegalo = i;
+                }else{
+                    Regalo regaloAux = new Regalo(regalosOrdenados[0].getPeso(),regalosOrdenados[0].getAlegria(),i);
+                    regalosOrdenados[0].setPeso(regalos[i].getPeso());
+                    regalosOrdenados[0].setAlegria(regalos[i].getAlegria());
+                    regalosOrdenados = correrPosiciones(regalosOrdenados,regaloAux,i,1);
+                    mejorTasa = tasas[i];
+                    numeroRegalo = i;
+                }
+            } else if(tasas[i]== mejorTasa){
+                /*
+                * Si las tasa coinciden, se coloca el de menor peso primero
+                */
+                if(regalos[i].getPeso()<regalos[numeroRegalo].getPeso()){
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria(),i);
+                        regalosOrdenados[i].setAlegria(regalos[i].getAlegria());
+                        regalosOrdenados[i].setPeso(regalos[i].getPeso());
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        mejorTasa = tasas[i];
+                        numeroRegalo = i;
+                    }else{
+                        regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
+                        mejorTasa = tasas[i];
+                        numeroRegalo = i;
+                    }
+                }else{
+                    if(regalosOrdenados[i]!=null){
+                        Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria(),i);
+                        regalosOrdenados[i].setAlegria(regalos[numeroRegalo].getAlegria());
+                        regalosOrdenados[i].setPeso(regalos[numeroRegalo].getPeso());
+                        regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                        regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                        mejorTasa = tasas[i];
+                        numeroRegalo = i;
+                    }else{
+                        if(regalosOrdenados[i-1].getAlegria()<regalos[i].getAlegria()){
+                            Regalo regaloAux = new Regalo(regalosOrdenados[i-1].getPeso(),regalosOrdenados[i-1].getAlegria(),i-1);
+                            regalosOrdenados[i-1].setAlegria(regalos[i].getAlegria());
+                            regalosOrdenados[i-1].setPeso(regalos[i].getPeso());
+                            regalosOrdenados[i] = new Regalo(regaloAux.getPeso(),regaloAux.getAlegria(),i);
+                        }else{
+                            regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
+                        }
+                    }
+                }
+            } else {
+                if(regalosOrdenados[0]!=null){
+                    if(regalosOrdenados[i]!=null){
+                            Regalo regaloAux = new Regalo(regalosOrdenados[i].getPeso(),regalosOrdenados[i].getAlegria(),i);
+                            regalosOrdenados[i].setAlegria(regalos[numeroRegalo].getAlegria());
+                            regalosOrdenados[i].setPeso(regalos[numeroRegalo].getPeso());
+                            regalosOrdenados[i+1].setAlegria(regaloAux.getAlegria());
+                            regalosOrdenados[i+1].setPeso(regaloAux.getPeso());
+                            mejorTasa = tasas[i];
+                            numeroRegalo = i;
+                    }else{
+                        regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
+                    }
+                }else{
+                    regalosOrdenados[i] = new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),i);
+                }
+            }
+        }
+        return regalosOrdenados;
     }
     public Regalo[] ordenarRegalosDeMayorAlegriaAMenor(Regalo[] regalos, int longitud){
         int mayorAlegria = regalos[0].getAlegria();
@@ -470,46 +567,48 @@ public class Main extends javax.swing.JFrame {
             Regalo [] regalosCopy = new Regalo[regalos.length]; 
             regalosCopy = leerFichero(fis);
             Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
+            Regalo[] regalosOrdenadosAlegria = new Regalo[regalos.length]; 
             Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
-            regalosOrdenados = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
-            regalosOrdenadosCopy = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
+            regalosOrdenados = ordenarPorTasa(regalos,regalos.length);
+            regalosOrdenadosCopy = ordenarPorTasa(regalos,regalos.length);
+            regalosOrdenadosAlegria = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
             long startTime = System.nanoTime();
             alfombras_voraz = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
-            jtaSolucion.append("Resultado por voraz\n");
+            jtaSolucion.append("Resultado por voraz de "+salida+"\n");
             FileWriter fichero = null;
             PrintWriter pw = null;
             fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
             pw = new PrintWriter(fichero);
-            pw.println("Resultado por voraz\n");
+            pw.println("Resultado por voraz de "+salida+"\n");
             mostrarResultado(alfombras_voraz, duration);
             escribirFichero(alfombras_voraz, pw, salida);
-            jtaSolucion.append("Resultado por Divide y vencerás \n");
+            jtaSolucion.append("Resultado por Divide y vencerás de "+salida+"\n");
             resetVariables();
             startTime = System.nanoTime();
-            alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosCopy);
+            alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosAlegria,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosAlegria);
             endTime = System.nanoTime();
             duration = (endTime - startTime);
-            pw.println("Resultado por Divide y vencerás \n");
+            pw.println("Resultado por Divide y vencerás de "+salida+"\n");
             mostrarResultado(alfombras_dyv,duration);
             escribirFichero(alfombras_dyv, pw, salida);
             resetVariables();
-            jtaSolucion.append("Resultado por Programación dinámica \n");
+            jtaSolucion.append("Resultado por Programación dinámica de "+salida+"\n");
             startTime = System.nanoTime();
-            alfombras_dinamico = dinamico.RepartirRegalos(regalos,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
+            alfombras_dinamico = dinamico.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
             endTime = System.nanoTime();
             duration = (endTime - startTime);
-            pw.println("Resultado por Programación dinámica \n");
+            pw.println("Resultado por Programación dinámica de "+salida+"\n");
             mostrarResultado(alfombras_dinamico,duration);
             escribirFichero(alfombras_dinamico, pw, salida);
             resetVariables();
-            jtaSolucion.append("Resultado por Backtraking \n");
+            jtaSolucion.append("Resultado por Backtraking de "+salida+"\n");
             startTime = System.nanoTime();
-            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC);
+            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,0);
             endTime = System.nanoTime();
             duration = (endTime - startTime);
-            pw.println("Resultado por Backtraking \n");
+            pw.println("Resultado por Backtraking de "+salida+"\n");
             mostrarResultado(alfombras_backtracking,duration);
             escribirFichero(alfombras_backtracking, pw, salida);
             fichero.close();

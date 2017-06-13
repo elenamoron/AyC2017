@@ -43,7 +43,7 @@ public class DyV {
                     if(part1[0].getPeso() <= pesoDisponible && (numRegalos/2) > 1){
                         RepartirRegalos(part1,A,B,C, regaloAux);
                     } else if(part1[0].getPeso() <= pesoDisponible && (numRegalos/2) < 2){
-                        alfombraMayor.setRegalo(part1[0],alfombraMayor.getRegalosIntro()+1);
+                        alfombraMayor.setRegalo(part1[0],alfombraMayor.getRegalosIntro()+1,part1[0].getNumero());
                         alfombraMayor.setRegalosIntro(1);
                         pesoDisponible -= part1[0].getPeso();
                         part1[0].setAlegria(0);
@@ -66,7 +66,7 @@ public class DyV {
         }else{
             if(regalos[0].getPeso() > 0){
                 if(regalos[0].getPeso() <= pesoDisponible){
-                    alfombraMayor.setRegalo(regalos[0],alfombraMayor.getRegalosIntro()+1);
+                    alfombraMayor.setRegalo(regalos[0],alfombraMayor.getRegalosIntro()+1,regalos[0].getNumero());
                     alfombraMayor.setRegalosIntro(1);
                     pesoDisponible -= regalos[0].getPeso();
                     regalos[0].setAlegria(0);

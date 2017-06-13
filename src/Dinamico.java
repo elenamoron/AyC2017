@@ -26,7 +26,7 @@ public class Dinamico {
                         if(alfombraMayor.getAlegria()+regalos[regalos.length-1].getAlegria()>alfombraMayor.getAlegria()){
                             alfombraMayor.setPeso(alfombraMayor.getPeso()-regalos[numRegalos-1].getPeso());
                             alfombraMayor.setAlegria(alfombraMayor.getAlegria()+regalos[numRegalos-1].getAlegria());
-                            alfombraMayor.setRegalo(regalos[numRegalos-1],alfombraMayor.getRegalosIntro());
+                            alfombraMayor.setRegalo(regalos[numRegalos-1],alfombraMayor.getRegalosIntro(),regalos[numRegalos-1].getNumero());
                             alfombraMayor.setRegalosIntro(alfombraMayor.getRegalosIntro());
                             regalos[numRegalos-1].setPeso(0);
                             regalos[numRegalos-1].setAlegria(0);

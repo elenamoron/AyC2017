@@ -44,8 +44,8 @@ public class Alfombra {
         return this.regalos;
     }
     
-    public void setRegalo(Regalo regalo,int posicion){
-        this.regalos[posicion] = new Regalo(regalo.getPeso(),regalo.getAlegria(),posicion);
+    public void setRegalo(Regalo regalo,int posicion, int numero){
+        this.regalos[posicion] = new Regalo(regalo.getPeso(),regalo.getAlegria(),numero);
     }
     
     public int getRegalosIntro(){
@@ -79,6 +79,16 @@ public class Alfombra {
             }
         }
         return alegria;
+    }
+    
+    public int sumarPeso(Regalo[] regalos){
+        int peso=0;
+        for(int i=0; i< regalos.length; i++){
+            if (regalos[i]!=null){
+                peso += regalos[i].getPeso();
+            }
+        }
+        return peso;
     }
     
     public int getNumRegalos(Regalo[] regalos){
