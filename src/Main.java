@@ -605,7 +605,7 @@ public class Main extends javax.swing.JFrame {
             resetVariables();
             jtaSolucion.append("Resultado por Backtraking de "+salida+"\n");
             startTime = System.nanoTime();
-            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,0);
+            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,0,0, regalosCopy);
             endTime = System.nanoTime();
             duration = (endTime - startTime);
             pw.println("Resultado por Backtraking de "+salida+"\n");

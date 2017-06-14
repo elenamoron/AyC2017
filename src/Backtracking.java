@@ -11,6 +11,7 @@
 public class Backtracking {
     
     Voraz vo = new Voraz();
+    int solucionesPorRegalo = 0;
     int alfombrasllenas = 0;
     int [][] soluciones = new int[20][20];
     int numSolucion = 0;
@@ -25,11 +26,24 @@ public class Backtracking {
         return regalos;
     }
     
-    public Alfombra[] RepartirRegalos(Regalo[] regalos, Alfombra A, Alfombra B, Alfombra C, int nivel){
+    public int beneficio(int[] solucion, Regalo[] regalos){
+        int beneficio = 0;
+        for(int i=0; i< solucion.length; i++){
+            if(i==0){
+                beneficio+=regalos[solucion[i]].getAlegria();
+            } else if(solucion[i]!=0){
+                beneficio+=regalos[solucion[i]].getAlegria();
+            }
+        }
+        return beneficio;
+    }
+    
+    public Alfombra[] RepartirRegalos(Regalo[] regalos, Alfombra A, Alfombra B, Alfombra C, int nivel, int mejorBeneficio, Regalo[] regalosAux){
         Alfombra[] alfombras = {A,B,C};
         Alfombra alfombraMayor = vo.mayorCapacidad(alfombras); //se utiliza el mismo método que en los algoritmos voraces
         int [] solucion = new int[regalos.length];
-        int i=0;
+        int i=numSolucion;
+        int pesoAlfombra = alfombraMayor.getPeso(); 
         while(alfombraMayor.getPeso()>0 && i< regalos.length){
            if(nivel == 0 || nivel != i){
                 if(regalos[i].getPeso()<=alfombraMayor.getPeso() && regalos[i].getPeso()!=0){
@@ -53,22 +67,30 @@ public class Backtracking {
                 solucion[j] = alfombraMayor.getRegalos()[j].getNumero(); 
             }
         }
-        soluciones[numSolucion]= solucion;
-        numSolucion++;
+        
+        int beneficioEncontrado = beneficio(solucion,regalos);
+        if(beneficioEncontrado>mejorBeneficio){
+            soluciones[numSolucion]= solucion;
+            mejorBeneficio = beneficioEncontrado;
+        }
+        
         nivel = alfombraMayor.getRegalosIntro();
-        if(i!=0){
+        if(alfombraMayor.getRegalosIntro()-1 >0 ){
             regalos[alfombraMayor.getRegalos()[alfombraMayor.getRegalosIntro()-1].getNumero()].setAlegria(0);
             regalos[alfombraMayor.getRegalos()[alfombraMayor.getRegalosIntro()-1].getNumero()].setPeso(0);
         }
-        for(int j=0; i<alfombras.length;j++){
-            if(alfombraMayor.getNombre() == alfombras[i].getNombre()){
-                alfombraMayor.setPeso(alfombras[i].getPeso());
-            }
+        while(solucionesPorRegalo < regalos.length){
+            alfombraMayor.setPeso(pesoAlfombra);
+            alfombraMayor.setRegalos(new Regalo[regalos.length]);
+            alfombraMayor.setRegalosIntro(0);
+            solucionesPorRegalo++;
+            RepartirRegalos(regalos, A, B, C,nivel-1,mejorBeneficio,regalosAux);
         }
-        
-        alfombraMayor.setRegalos(new Regalo[regalos.length]);
-        alfombraMayor.setRegalosIntro(0);
-        RepartirRegalos(regalos, A, B, C,nivel-1);
+        numSolucion++;
+        solucionesPorRegalo=0;
+        alfombraMayor.setPeso(pesoAlfombra);
+        RepartirRegalos(regalosAux, A, B, C,0,mejorBeneficio,regalosAux);
+    
         return alfombras;
     }
     

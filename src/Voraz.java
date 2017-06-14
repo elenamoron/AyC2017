@@ -31,11 +31,11 @@ public class Voraz {
     
     public Alfombra[] RepartirRegalos(Regalo[] regalos, Alfombra A, Alfombra B, Alfombra C){
         Alfombra[] alfombras = {A,B,C};
-        Alfombra alfombraMayor = mayorCapacidad(alfombras);
-        int pesoDisponible = alfombraMayor.getPeso();
         int regalosIntro=0;
         int alfombrasllenas=0;
         for (int i=0; i < regalos.length; i++){
+            Alfombra alfombraMayor = mayorCapacidad(alfombras);
+            int pesoDisponible = alfombraMayor.getPeso();
             if(pesoDisponible>0){
                 if(regalos[i].getPeso()>0){
                     if(regalos[i].getPeso() <= pesoDisponible ){
