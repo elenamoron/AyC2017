@@ -565,7 +565,9 @@ public class Main extends javax.swing.JFrame {
         try {                   
             regalos = leerFichero(fis);
             Regalo [] regalosCopy = new Regalo[regalos.length]; 
+            Regalo [] regalosAux = new Regalo[regalos.length]; 
             regalosCopy = leerFichero(fis);
+            regalosAux = leerFichero(fis);
             Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
             Regalo[] regalosOrdenadosAlegria = new Regalo[regalos.length]; 
             Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
@@ -605,7 +607,7 @@ public class Main extends javax.swing.JFrame {
             resetVariables();
             jtaSolucion.append("Resultado por Backtraking de "+salida+"\n");
             startTime = System.nanoTime();
-            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,0,0, regalosCopy);
+            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,fis);
             endTime = System.nanoTime();
             duration = (endTime - startTime);
             pw.println("Resultado por Backtraking de "+salida+"\n");
