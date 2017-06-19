@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -50,11 +52,10 @@ public class Main extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jcbejemplo = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtaSolucion = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,25 +65,18 @@ public class Main extends javax.swing.JFrame {
 
         jLabel3.setText("Regalos posibles:");
 
-        jcbejemplo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ejemplo 1", "ejemplo 2", "ejemplo 3" }));
-        jcbejemplo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbejemploActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("SOLUCIÓN");
-
-        jButton1.setText("CALCULAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jtaSolucion.setColumns(20);
         jtaSolucion.setRows(5);
         jScrollPane1.setViewportView(jtaSolucion);
+
+        jButton2.setText("abrir archivo");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,33 +95,27 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jcbejemplo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(86, 86, 86))))
+                        .addComponent(jButton2)
+                        .addGap(165, 165, 165))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(142, 142, 142)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel4))
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(152, 152, 152)
+                .addComponent(jLabel4)
+                .addContainerGap(196, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jcbejemplo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton2))
+                .addGap(40, 40, 40)
                 .addComponent(jLabel4)
                 .addGap(64, 64, 64)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -530,100 +518,84 @@ public class Main extends javax.swing.JFrame {
             
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:      
-        Voraz vo = new Voraz();
-        DyV dyv = new DyV();
-        Dinamico dinamico = new Dinamico();
-        Backtracking backtracking = new Backtracking();
-        File fis = new File("");
-        String salida="";
-        switch(jcbejemplo.getSelectedItem().toString()){
-            case "ejemplo 1": {
-                /*
-                * Función System.getProperty("user.dir")---> Devuelve el directorio raíz donde se encuentra el proyecto,
-                *   para así poder ejecutar desde cualquier ordenador sin problemas de rutas
-                */
-                fis = new File(System.getProperty("user.dir")+"/ej1.txt");
-                salida="ej1Resultado.txt";
-                break;
-            }
-                        
-            case "ejemplo 2": {
-                fis = new File(System.getProperty("user.dir")+"/ej2.txt");
-                salida="ej2Resultado.txt";
-                break;
-            }
-            
-            case "ejemplo 3": {
-                fis = new File(System.getProperty("user.dir")+"/ej3.txt");
-                salida="ej3Resultado.txt";
-                break;
-            }
-        
-        }
-        try {                   
-            regalos = leerFichero(fis);
-            Regalo [] regalosCopy = new Regalo[regalos.length]; 
-            Regalo [] regalosAux = new Regalo[regalos.length]; 
-            regalosCopy = leerFichero(fis);
-            regalosAux = leerFichero(fis);
-            Regalo[] regalosOrdenados = new Regalo[regalos.length]; 
-            Regalo[] regalosOrdenadosAlegria = new Regalo[regalos.length]; 
-            Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
-            regalosOrdenados = ordenarPorTasa(regalos,regalos.length);
-            regalosOrdenadosCopy = ordenarPorTasa(regalos,regalos.length);
-            regalosOrdenadosAlegria = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
-            long startTime = System.nanoTime();
-            alfombras_voraz = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime);
-            jtaSolucion.append("Resultado por voraz de "+salida+"\n");
-            FileWriter fichero = null;
-            PrintWriter pw = null;
-            fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
-            pw = new PrintWriter(fichero);
-            pw.println("Resultado por voraz de "+salida+"\n");
-            mostrarResultado(alfombras_voraz, duration);
-            escribirFichero(alfombras_voraz, pw, salida);
-            jtaSolucion.append("Resultado por Divide y vencerás de "+salida+"\n");
-            resetVariables();
-            startTime = System.nanoTime();
-            alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosAlegria,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosAlegria);
-            endTime = System.nanoTime();
-            duration = (endTime - startTime);
-            pw.println("Resultado por Divide y vencerás de "+salida+"\n");
-            mostrarResultado(alfombras_dyv,duration);
-            escribirFichero(alfombras_dyv, pw, salida);
-            resetVariables();
-            jtaSolucion.append("Resultado por Programación dinámica de "+salida+"\n");
-            startTime = System.nanoTime();
-            alfombras_dinamico = dinamico.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
-            endTime = System.nanoTime();
-            duration = (endTime - startTime);
-            pw.println("Resultado por Programación dinámica de "+salida+"\n");
-            mostrarResultado(alfombras_dinamico,duration);
-            escribirFichero(alfombras_dinamico, pw, salida);
-            resetVariables();
-            jtaSolucion.append("Resultado por Backtraking de "+salida+"\n");
-            startTime = System.nanoTime();
-            alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,fis);
-            endTime = System.nanoTime();
-            duration = (endTime - startTime);
-            pw.println("Resultado por Backtraking de "+salida+"\n");
-            mostrarResultado(alfombras_backtracking,duration);
-            escribirFichero(alfombras_backtracking, pw, salida);
-            fichero.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                    
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jcbejemploActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbejemploActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jcbejemploActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog((Component)evt.getSource());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            try {
+                Voraz vo = new Voraz();
+                DyV dyv = new DyV();
+                Dinamico dinamico = new Dinamico();
+                Backtracking backtracking = new Backtracking();
+                //File fis = new File("");
+                String salida="";
+                //String fileName = file.toString();
+                //fis = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                salida="Resultado.txt";
+                regalos = leerFichero(file);
+                Regalo [] regalosCopy = new Regalo[regalos.length]; 
+                Regalo [] regalosAux = new Regalo[regalos.length]; 
+                regalosCopy = leerFichero(file);
+                regalosAux = leerFichero(file);
+                Regalo[] regalosOrdenados = new Regalo[regalos.length];
+                Regalo[] regalosOrdenadosAlegria = new Regalo[regalos.length]; 
+                Regalo[] regalosOrdenadosCopy = new Regalo[regalos.length]; 
+                regalosOrdenados = ordenarPorTasa(regalos,regalos.length);
+                regalosOrdenadosCopy = ordenarPorTasa(regalos,regalos.length);
+                regalosOrdenadosAlegria = ordenarRegalosDeMayorAlegriaAMenor(regalos,regalos.length);
+                long startTime = System.nanoTime();
+                alfombras_voraz = vo.RepartirRegalos(regalosOrdenados,AlfombraA,AlfombraB, AlfombraC);
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                jtaSolucion.append("Resultado por voraz de "+salida+"\n");
+                FileWriter fichero = null;
+                PrintWriter pw = null;
+                fichero = new FileWriter(System.getProperty("user.dir")+"/"+salida);
+                pw = new PrintWriter(fichero);
+                pw.println("Resultado por voraz de "+salida+"\n");
+                mostrarResultado(alfombras_voraz, duration);
+                escribirFichero(alfombras_voraz, pw, salida);
+                jtaSolucion.append("Resultado por Divide y vencerás de "+salida+"\n");
+                resetVariables();
+                startTime = System.nanoTime();
+                alfombras_dyv = dyv.RepartirRegalos(regalosOrdenadosAlegria,AlfombraA,AlfombraB, AlfombraC,regalosOrdenadosAlegria);
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                pw.println("Resultado por Divide y vencerás de "+salida+"\n");
+                mostrarResultado(alfombras_dyv,duration);
+                escribirFichero(alfombras_dyv, pw, salida);
+                pw.println("Duración del algoritmo en nanosegundos "+duration+"\n");
+                resetVariables();
+                jtaSolucion.append("Resultado por Programación dinámica de "+salida+"\n");
+                startTime = System.nanoTime();
+                alfombras_dinamico = dinamico.RepartirRegalos(regalosOrdenadosCopy,AlfombraA,AlfombraB, AlfombraC, regalos.length-1);
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                pw.println("Resultado por Programación dinámica de "+salida+"\n");
+                mostrarResultado(alfombras_dinamico,duration);
+                escribirFichero(alfombras_dinamico, pw, salida);
+                pw.println("Duración del algoritmo en nanosegundos "+duration+"\n");
+                resetVariables();
+                jtaSolucion.append("Resultado por Backtraking de "+salida+"\n");
+                startTime = System.nanoTime();
+                alfombras_backtracking = backtracking.RepartirRegalos(regalosCopy,AlfombraA,AlfombraB, AlfombraC,file);
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                pw.println("Resultado por Backtraking de "+salida+"\n");
+                mostrarResultado(alfombras_backtracking,duration);
+                escribirFichero(alfombras_backtracking, pw, salida);
+                pw.println("Duración del algoritmo en nanosegundos "+duration+"\n");
+                fichero.close();
+            } catch (Exception ex) {
+              System.out.println("problem accessing file"+file.getAbsolutePath());
+            }
+        } 
+        else {
+            System.out.println("File access cancelled by user.");
+        }       
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -662,12 +634,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JComboBox<String> jcbejemplo;
     private javax.swing.JTextArea jtaSolucion;
     // End of variables declaration//GEN-END:variables
 }

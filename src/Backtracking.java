@@ -12,7 +12,7 @@ public class Backtracking {
     Voraz vo = new Voraz();
     int solucionesPorRegalo = 0;
     int alfombrasllenas = 0;
-    int [][] soluciones = new int[20][20];
+    int [][] soluciones = null;
     int numSolucion = 0;
     Main m = new Main();
     
@@ -179,6 +179,7 @@ public class Backtracking {
         Alfombra[] alfombras = {A,B,C};  
         int nivel = 0;
         int mejorBeneficio = 0;
+        soluciones = new int[regalos.length][regalos.length];
         Regalo[] regalosAux = new Regalo[regalos.length];
         for(int i=0;i<regalos.length;i++){
             regalosAux[i]= new Regalo(regalos[i].getPeso(),regalos[i].getAlegria(),regalos[i].getNumero());
