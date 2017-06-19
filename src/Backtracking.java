@@ -69,7 +69,8 @@ public class Backtracking {
         }
         return alfombra;
     }
-    public Alfombra algoritmo(Regalo [] regalos, Alfombra alfombra,int nivel, int mejorBeneficio, int[] solucion, int pesoAlfombra, Regalo[] regaloAux, File fis) throws IOException{
+    public Alfombra algoritmo(Regalo [] regalos, Alfombra alfombra,int nivel, int mejorBeneficio, int[] solucion, int pesoAlfombra,
+            Regalo[] regaloAux, File fis, Alfombra A, Alfombra B, Alfombra C) throws IOException{
         int i=numSolucion;
         while(numSolucion < regalos.length){
             while(alfombra.getPeso()>0 && i< regalos.length){
@@ -124,7 +125,7 @@ public class Backtracking {
                     nivel--;
                 }
                 solucion = new int[regalos.length];
-                algoritmo(regalos, alfombra,nivel,mejorBeneficio,solucion,pesoAlfombra,regaloAux,fis);
+                algoritmo(regalos, alfombra,nivel,mejorBeneficio,solucion,pesoAlfombra,regaloAux,fis,A,B,C);
 
 
             }
@@ -135,11 +136,37 @@ public class Backtracking {
             alfombra.setRegalosIntro(0);
             if(alfombrasllenas == 0){
                 regaloAux = m.leerFichero(fis);
+            } else {
+                regaloAux = m.leerFichero(fis);
+                if (alfombra.getNombre()!= A.getNombre()){
+                    for(int j=0; j< A.getNumRegalos(A.getRegalos());j++){
+                        if(A.getRegalos()[j]!=null){
+                            regaloAux = actualizarRegalos(A.getRegalos()[j],regaloAux);
+                        }
+                    }
+                }
+                if (alfombra.getNombre()!= B.getNombre()){
+                    for(int j=0; j< B.getNumRegalos(B.getRegalos());j++){
+                        if(B.getRegalos()[j]!=null){
+                            regaloAux = actualizarRegalos(B.getRegalos()[j],regaloAux);
+                        }
+                    }
+                    
+                }
+                if (alfombra.getNombre()!= C.getNombre()){
+                    if(C.getRegalosIntro()> 0){
+                        for(int j=0; j< C.getNumRegalos(C.getRegalos());j++){
+                            if(C.getRegalos()[j]!=null){
+                                regaloAux = actualizarRegalos(C.getRegalos()[j],regaloAux);
+                            }
+                        }
+                    }
+                }
             }
             if(nivel!=0){
                 nivel--;
             }
-            algoritmo(regaloAux, alfombra,nivel,mejorBeneficio,solucion,pesoAlfombra,regaloAux,fis);
+            algoritmo(regaloAux, alfombra,nivel,mejorBeneficio,solucion,pesoAlfombra,regaloAux,fis,A,B,C);
         }
         if(alfombrasllenas == 0){
             regaloAux = m.leerFichero(fis);
@@ -162,14 +189,36 @@ public class Backtracking {
             Alfombra alfombraMayor = vo.mayorCapacidad(alfombras); //se utiliza el mismo método que en los algoritmos voraces
             int pesoAlfombra = alfombraMayor.getPeso(); 
             int [] solucion = new int[regalos.length];
-            alfombraMayor = algoritmo(regalos,alfombraMayor,nivel,mejorBeneficio,solucion, pesoAlfombra,regalosAux,fichero);
+            numSolucion = 0;
+            alfombraMayor = algoritmo(regalos,alfombraMayor,nivel,mejorBeneficio,solucion, pesoAlfombra,regalosAux,fichero,A,B,C);
+            
+            regalos = m.leerFichero(fichero);
+            
+            for(int j=0; j< alfombras.length;j++){
+                if(alfombras[j].getPeso()== 0){
+                    for(int i=0; i< alfombras[j].getNumRegalos(alfombras[j].getRegalos());i++){
+                        regalos = actualizarRegalos(alfombras[j].getRegalos()[i],regalos);
+                    }
+                }
+            }
+            switch(alfombraMayor.getNombre()){
+                case "A":
+                    A.setRegalos(alfombraMayor.getRegalos());
+                    A.setPeso(alfombraMayor.getPeso());
+                    
+                    break;
+                case "B":
+                    B.setRegalos(alfombraMayor.getRegalos());
+                    B.setPeso(alfombraMayor.getPeso());
+                    
+                    break;
+                case "C":
+                    C.setRegalos(alfombraMayor.getRegalos());
+                    C.setPeso(alfombraMayor.getPeso());
+                    
+                    break;
+            }
             alfombrasllenas++;
-            if(alfombrasllenas<1){
-                regalos = m.leerFichero(fichero);
-            }
-            for(int i=0; i< alfombraMayor.getRegalosIntro();i++){
-                regalos = actualizarRegalos(alfombraMayor.getRegalos()[i],regalos);
-            }
             
         }
         
