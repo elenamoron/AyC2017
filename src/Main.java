@@ -557,6 +557,7 @@ public class Main extends javax.swing.JFrame {
                 pw.println("Resultado por voraz de "+salida+"\n");
                 mostrarResultado(alfombras_voraz, duration);
                 escribirFichero(alfombras_voraz, pw, salida);
+                pw.println("Duración del algoritmo en nanosegundos "+duration+"\n");
                 jtaSolucion.append("Resultado por Divide y vencerás de "+salida+"\n");
                 resetVariables();
                 startTime = System.nanoTime();
